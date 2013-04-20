@@ -11,6 +11,18 @@ import operator
 import timeit
 
 
+# Compare two values by value, and then by key first letter.
+def _my_cmp(x):
+    """
+        Comparison of values in word lists.
+
+        Will prefer later letters in the alphabet, due to how sorting
+        works. Might swap values.
+    """
+    if x[0]:
+        return "%s%s" % (x[1], x[0][0])
+
+
 # Setup.
 def _map():
     """
@@ -71,7 +83,7 @@ def _reduce_step_1(a):
     # whether or not it should be included.
     # We must ensure it is removed here.
     return (a[0], sorted(result.iteritems(),
-        key=operator.itemgetter(1), reverse=True)[:5])
+        key=_my_cmp, reverse=True)[:5])
 
 
 def _inner_reduce_step_1(a, b):
@@ -81,7 +93,7 @@ def _inner_reduce_step_1(a, b):
     if b not in a:
         if len(a) > 5:
             a = dict(sorted(a.iteritems(),
-                key=operator.itemgetter(1), reverse=True)[:5])
+                key=_my_cmp, reverse=True)[:5])
 
         a[b] = 1
     else:
@@ -111,7 +123,7 @@ def _main():
         words.iteritems(), callback=calculate_tops)
 
     results.wait()
-    print json.dumps(sorted(tops.iteritems(), key=operator.itemgetter(1),
+    print json.dumps(sorted(tops.iteritems(), key=_my_cmp,
         reverse=True)[:5])
 
 if __name__ == '__main__':

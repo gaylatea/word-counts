@@ -11,6 +11,17 @@ import timeit
 thesewords = open('./words', 'r')
 words = thesewords.read().split('\n')
 
+# Compare two values by value, and then by key first letter.
+def _my_cmp(x):
+    """
+        Comparison of values in word lists.
+
+        Will prefer later letters in the alphabet, due to how sorting
+        works. Might swap values.
+    """
+    if x[0]:
+        return "%s%s" % (x[1], x[0][0])
+
 
 # Collection.
 def _brute_force_v1():
@@ -25,7 +36,7 @@ def _brute_force_v1():
             counts[each] += 1
 
     # Sort the output.
-    print json.dumps(sorted(counts.iteritems(), key=operator.itemgetter(1),
+    print json.dumps(sorted(counts.iteritems(), key=_my_cmp,
         reverse=True)[:5])
 
 
@@ -47,7 +58,7 @@ def _remove_list_v2():
         tempwords = [x for x in tempwords if x != current_word]
 
     # Sort the output.
-    print json.dumps(sorted(counts.iteritems(), key=operator.itemgetter(1),
+    print json.dumps(sorted(counts.iteritems(), key=_my_cmp,
         reverse=True)[:5])
 
 
@@ -78,7 +89,7 @@ def _map_reduce_v3():
         if b not in a:
             if len(a) > 5:
                 a = dict(sorted(a.iteritems(),
-                    key=operator.itemgetter(1), reverse=True)[:5])
+                    key=_my_cmp, reverse=True)[:5])
 
             a[b] = 1
         else:
@@ -89,7 +100,7 @@ def _map_reduce_v3():
     # The reduce engine will actually return the last item additionally,
     # so we need to remove it.
     result = reduce(reduce_step, s, {})
-    print json.dumps(sorted(result.iteritems(), key=operator.itemgetter(1),
+    print json.dumps(sorted(result.iteritems(), key=_my_cmp,
         reverse=True)[:5])
 
 if __name__ == '__main__':
