@@ -4,6 +4,7 @@
 """
 # Imports.
 import operator
+import timeit
 
 # Collection.
 def _brute_force_v1():
@@ -26,4 +27,6 @@ def _brute_force_v1():
         print "%s: %s" % (each[0], each[1])
 
 if __name__ == '__main__':
-    _brute_force_v1()
+    print "Brute-force approach:"
+    print timeit.timeit('_brute_force_v1()', setup='from __main__ import _brute_force_v1', number=1)
+    print ""
