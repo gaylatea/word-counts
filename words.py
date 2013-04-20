@@ -59,6 +59,13 @@ def _map_reduce_v3():
         Slower, but doesn't keep a giant dictionary in memory.
 
         Still requires the words from the load state in mem, though.
+
+        What worries me is that this really requires the inputs be
+        sorted, otherwise it cannot function properly.
+
+        This means that it cannot be done in parallel with the map
+        step, which would make processing with a big Map/Reduce system
+        a little trickier.
     """
     s = sorted(words)
 
