@@ -4,7 +4,6 @@
 """
 # Imports.
 import json
-import operator
 import timeit
 
 # Setup.

@@ -7,7 +7,6 @@
 # Imports.
 from multiprocessing import Pool
 import json
-import operator
 import timeit
 
 
