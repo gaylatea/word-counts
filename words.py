@@ -5,7 +5,6 @@
 # Imports.
 import operator
 import timeit
-import resource
 
 # Setup.
 thesewords = open('./words', 'r')
