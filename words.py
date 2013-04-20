@@ -3,6 +3,7 @@
     Provide a count of the top 5 words in a given word list.
 """
 # Imports.
+import json
 import operator
 import timeit
 
@@ -24,9 +25,8 @@ def _brute_force_v1():
             counts[each] += 1
 
     # Sort the output.
-    for each in sorted(
-        counts.iteritems(), key=operator.itemgetter(1), reverse=True)[:5]:
-        print "%s: %s" % (each[0], each[1])
+    print json.dumps(sorted(counts.iteritems(), key=operator.itemgetter(1),
+        reverse=True)[:5])
 
 
 def _remove_list_v2():
@@ -47,9 +47,8 @@ def _remove_list_v2():
         tempwords = [x for x in tempwords if x != current_word]
 
     # Sort the output.
-    for each in sorted(
-        counts.iteritems(), key=operator.itemgetter(1), reverse=True)[:5]:
-        print "%s: %s" % (each[0], each[1])
+    print json.dumps(sorted(counts.iteritems(), key=operator.itemgetter(1),
+        reverse=True)[:5])
 
 
 def _map_reduce_v3():
@@ -90,9 +89,8 @@ def _map_reduce_v3():
     # The reduce engine will actually return the last item additionally,
     # so we need to remove it.
     result = reduce(reduce_step, s, {})
-    for each in sorted(result.iteritems(), key=operator.itemgetter(1),
-        reverse=True)[:5]:
-        print "%s: %s" % (each[0], each[1])
+    print json.dumps(sorted(result.iteritems(), key=operator.itemgetter(1),
+        reverse=True)[:5])
 
 if __name__ == '__main__':
     print "Brute-force approach:"

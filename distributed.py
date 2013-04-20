@@ -5,42 +5,116 @@
     Allows for parallel processing of word counts.
 """
 # Imports.
+from multiprocessing import Pool
+import json
 import operator
 import timeit
 
+
 # Setup.
-# Should investigate setting this up properly during the map() phase.
-thesewords = open('./words', 'r')
-words = thesewords.read().split('\n')
+def _map():
+    """
+        Return the word list that we're working from.
+
+        These are partitioned into segments based off of their first
+        letter, for easier processing by the reducers.
+    """
+    partitions = {
+        'ab': [],
+        'cd': [],
+        'ef': [],
+        'gh': [],
+        'ij': [],
+        'kl': [],
+        'mn': [],
+        'op': [],
+        'qr': [],
+        'st': [],
+        'uv': [],
+        'wx': [],
+        'yz': [],
+    }
+    thesewords = open('./words', 'r')
+
+    def map_step(a):
+        """
+            Partition off as needed.
+        """
+        if not a:
+            return
+
+        for key in partitions:
+            if a[0] in key:
+                # Append and remove the trailing newline.
+                partitions[key].append(a[:-1])
+                break
+
+    map(map_step, thesewords)
+
+    # Sort the words in the partition before they're sent out.
+    for key in partitions:
+        partitions[key] = sorted(partitions[key])
+
+    return partitions
+
 
 # Reduction step 1.
-def _reduce_step_1(a, b):
+def _reduce_step_1(a):
     """
         Given a list of words from a particular partition, generate a
         list of top 5 words.
 
         These can be run in parallel.
     """
-    pass
+    result = reduce(_inner_reduce_step_1, a[1], {})
+    # The reduce step will still have the last word it looked at,
+    # whether or not it should be included.
+    # We must ensure it is removed here.
+    return (a[0], sorted(result.iteritems(),
+        key=operator.itemgetter(1), reverse=True)[:5])
 
 
-def _reduction_step_2(a, b):
+def _inner_reduce_step_1(a, b):
     """
-        Given dicts of {<word>: <count>, ...}, generate the final count
-        of top 5 words.
-
-        Investigate running this in parallel too.
+        Keep a running top-5 total for this wordlist partition.
     """
-    pass
+    if b not in a:
+        if len(a) > 5:
+            a = dict(sorted(a.iteritems(),
+                key=operator.itemgetter(1), reverse=True)[:5])
+
+        a[b] = 1
+    else:
+        a[b] += 1
+
+    return a
+
 
 
 def _main():
     """
         Timed script.
     """
-    pass
+    tops = {}
+
+    def calculate_tops(a):
+        """
+            Put the top 5 results in their right place.
+        """
+        for group in a:
+            for word in group[1]:
+                tops[word[0]] = word[1]
+
+    words           = _map()
+    process_pool    = Pool(processes=13)
+    results = process_pool.map_async(_reduce_step_1,
+        words.iteritems(), callback=calculate_tops)
+
+    results.wait()
+    print json.dumps(sorted(tops.iteritems(), key=operator.itemgetter(1),
+        reverse=True)[:5])
 
 if __name__ == '__main__':
     print "Distributed reducers approach:"
-    print timeit.timeit('_main', setup='from __main__ import _main', number=1)
+    print timeit.timeit('_main()', setup='from __main__ import _main', number=1)
     print ""
