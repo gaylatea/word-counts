@@ -20,7 +20,7 @@ def _my_cmp(x):
         works. Might swap values.
     """
     if x[0]:
-        return "%s%s" % (x[1], x[0][0])
+        return "%s%s" % (x[1], x[0])
 
 
 # Setup.
