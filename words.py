@@ -15,7 +15,7 @@ words = thesewords.read().split('\n')
 # Collection.
 def _brute_force_v1():
     """
-        Very simple brute-force solution (slow) to this one.
+        Very simple brute-force solution to this one.
     """
     counts = {}
     for each in words:
@@ -89,8 +89,14 @@ def _map_reduce_v3():
         print "%s: %s" % (each[0], each[1])
 
 if __name__ == '__main__':
+    print "Brute-force approach:"
+    print timeit.timeit('_brute_force_v1()', setup='from __main__ import _brute_force_v1', number=1)
+    run_1_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    print "%s kB" % (run_1_rss / 1024 / 1024)
+    print ""
     print "Map-reduce approach:"
     print timeit.timeit('_map_reduce_v3()', setup='from __main__ import _map_reduce_v3', number=1)
-    rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    print "%s kB" % (rss / 1024 / 1024)
+    run_3_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    if run_3_rss == run_1_rss:
+        print "Uses less memory!"
     print ""
