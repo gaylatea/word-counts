@@ -25,6 +25,5 @@ def _main():
         reverse=True)[:5])
 
 if __name__ == '__main__':
-    print "Brute-force approach:"
     print timeit.timeit('_main()', setup='from __main__ import _main', number=1)
     print ""
