@@ -20,19 +20,19 @@ def _map():
         letter, for easier processing by the reducers.
     """
     partitions = {
-        'ab': [],
-        'cd': [],
-        'ef': [],
+        'az': [],
+        'cq': [],
+        'uf': [],
         'gh': [],
-        'ij': [],
-        'kl': [],
-        'mn': [],
-        'op': [],
-        'qr': [],
-        'st': [],
-        'uv': [],
-        'wx': [],
-        'yz': [],
+        'im': [],
+        'ln': [],
+        'pk': [],
+        'oj': [],
+        'dr': [],
+        'sx': [],
+        'ev': [],
+        'wt': [],
+        'yb': [],
     }
     thesewords = open('./words', 'r')
 
@@ -53,6 +53,7 @@ def _map():
 
     # Sort the words in the partition before they're sent out.
     for key in partitions:
+        print "%s: %s" % (key, len(partitions[key]))
         partitions[key] = sorted(partitions[key])
 
     return partitions
