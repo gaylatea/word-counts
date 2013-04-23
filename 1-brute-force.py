@@ -3,7 +3,8 @@
     Provide a count of the top 5 words in a given word list.
 """
 # Imports.
-from    common import words, my_cmp
+from    common import words, mysort
+from operator import itemgetter
 import  json
 import  timeit
 
@@ -15,15 +16,14 @@ def _main():
     """
     counts = {}
     for each in words:
+        each = each[:-1]
         if each not in counts:
             counts[each] = 1
         else:
             counts[each] += 1
 
     # Sort the output.
-    print json.dumps(sorted(counts.iteritems(), key=my_cmp,
-        reverse=True)[:5])
+    print mysort(counts.iteritems())
 
 if __name__ == '__main__':
-    print timeit.timeit('_main()', setup='from __main__ import _main', number=1)
-    print ""
+    _main()
